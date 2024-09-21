@@ -8,7 +8,7 @@
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="dist/theme/white.css">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
@@ -21,16 +21,25 @@
             ## Nutpie: Fast sampling with Stan, python and rust
 
             Adrian Seyboldt
+            
+            <img src="plots/4-pymc-labs-transp-black.png" alt="PyMC Labs Logo" width="30%"/>
 
             Notes:
-            I'm Adrian Seyboldt, core dev of PyMC (python lib for bayesian stats)
-            Work with PyMC Labs, consultency.
 
-            Nutpie is a fast implementation of NUTS for Stan or PyMC models.
+            Nice to see you all!
+            Like to show nutpie, which I have been working on for some time.
+            Hopefully I can convince you to give it a go, it is on average 2x faster than Stan (*).
+            
+            Before I start talking about it I think I should explain how I ended up doing something so silly as writing a whole new sampler lib from scratch.
 
-            On average 2x faster than Stan (*).
+            I got into stats through stan.
+            Wanted python -> pymc bad
+            implement mass matrix adapt
 
-            Convenient interface.
+
+            #I'm Adrian Seyboldt, core dev of PyMC (python lib for bayesian stats)
+            #Work with PyMC Labs, consultency.
+            todo pymc-labs logo
 
             ---
 
@@ -53,26 +62,11 @@
             Low-level and fast interface to Stan models.
 
             Notes:
+            Edward A. Roualdes 
+            Brian Ward
+            Bob Carpenter
+
             todo ref to bridgestan paper
-            Leute nachschauen!
-
-            ---
-
-            ### Why use it for Stan models?
-
-            - Faster mass matrix adaptation
-            - Avoid overhead for trace storage
-
-            - Sampler pausing
-            - Live inspection of the trace
-
-            - Extra sampler statistics
-            - Detailed progress info
-
-            - Compatible with arviz ecosystem to analyze traces
-
-            Notes:
-            todo one after the other?
 
             ---
 
@@ -101,21 +95,28 @@
 
             ---
 
+            $$ \DeclareMathOperator*{\argmin}{argmin} \argmin_{\eta} \int \lVert \nabla \log N(\theta | 0, 1) - \nabla \log F^*_\eta \pi(\theta) \rVert^2 dF_\eta^*\pi(\theta) $$
+
+            $$ F_{\mu, \sigma}(x) = \text{diag}(\sigma)x + \mu \Rightarrow \text{Diagonal mass matrix} $$
+
+            $$ F_{\mu, L}(x) = Lx + \mu \Rightarrow \text{Full mass matrix} $$
+
+            ---
+
             - Mass matrix converges faster
             - Good properties for multivariate normal posteriors
             - Generalizes to full mass matrix or normalizing flows
 
-            Try the experimental low-rank modified mass matrix adaptation!
+            Try the experimental low-rank modified mass matrix adaptation! <!-- .element: class="fragment" data-frament-index="1" -->
 
             Notes:
             todo "Try..." später dazu
-            todo titel?
 
             ---
 
             ## Early tuning
 
-            <img src="plots/early_adapt.gif" alt="Early adaptation schema" width="80%"/>
+            <img src="plots/early_adapt2.gif" alt="Early adaptation schema" width="80%"/>
 
             Notes:
             todo remove orange
@@ -146,8 +147,9 @@
             <img src="plots/ecdf.png" alt="Speedup" width="80%"/>
 
             Notes: 
-            todo add "nutpie faster", "stan faster"
-            Look up actual percentages.
+	    85% nutpie faster
+	    35% more than 2x as fast
+	    midian speedup 1.6
             add ref to samplerlab repo
 
             ---
@@ -161,7 +163,7 @@
 
             code = """
             data {
-               mu ...
+                mu ...
             }
             """
             compiled = nutpie.compile_stan_model(code=code)
@@ -197,6 +199,8 @@
 
             <img src="plots/nutpie-qr.png" alt="https://github.com/pymc-devs/nutpie" width="20%"/>
 
+            https://github.com/pymc-devs/nutpie
+
             Questions?
 
             Notes:
@@ -214,6 +218,39 @@
             - Exact location of divergences -> better for parallel plots
             - Unconstrained draws and grads -> Easier to find posterior correlations and parametrization problems
 
+            ---
+
+            ### Why use nutpie for Stan models?
+
+            <ul>
+              <li class="fragment", data-fragment-index="0">
+                Faster mass matrix adaptation
+              </li>
+              <li class="fragment", data-fragment-index="0">
+                Avoid overhead for trace storage
+              </li>
+              <li class="fragment", data-fragment-index="1">
+                Sampler pausing
+              </li>
+              <li class="fragment", data-fragment-index="1">
+                Live inspection of the trace
+              </li>
+              <li class="fragment", data-fragment-index="2">
+                Extra sampler statistics
+              </li>
+              <li class="fragment", data-fragment-index="2">
+                Detailed progress info
+              </li>
+              <li class="fragment", data-fragment-index="3">
+                Compatible with arviz ecosystem to analyze traces
+              </li>
+            </ul>
+
+            Notes:
+            todo one after the other?
+
+            ---
+
           </textarea>
         </section>
       </div>
@@ -223,15 +260,19 @@
 		<script src="plugin/notes/notes.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
 		<script>
 			// More info about initialization & config:
 			// - https://revealjs.com/initialization/
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
+				controls: true,
+                                slideNumber: true,
+				transition: 'none',
 
 				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.MathJax3 ]
 			});
 		</script>
 	</body>
